@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+ 
+ <style>
+   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  height: 100vh;
+
+background-size: cover;
+
+
+  background-color: #0ae1b6bc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+
+  background-color: #d70c0c00;
+  border-radius: 6px;
+  width: 320px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2)
+}
+
+header {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #999;
+  gap: 6px;
+  color: #008DD4;
+}
+
+header i {
+  font-size: 25px;
+  cursor: pointer;
+  display: none;
+}
+
+.container.active header i {
+  display: block;
+}
+
+.container.active .select-city {
+  display: none;
+}
+
+.body.offline .select-city,
+.body.offline .weather {
+  display: none;
+}
+
+.offline-msg {
+  display: none;
+  color: #555;
+  padding: 10px 0;
+}
+
+.body.offline .offline-msg {
+  text-align: center;
+  display: block;
+}
+
+.container.active .select-city {
+  display: none;
+}
+
+.select-city {
+  text-align: center;
+  display: block;
+  padding: 10px 15px;
+}
+
+.msg {
+  height: 40px;
+  border-radius: 6px;
+  width: 80%;
+  margin: 0 auto 10px auto;
+  line-height: 35px;
+  display: none;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: scroll;
+}
+
+.msg.error {
+  display: block;
+  background-color: #B9323255;
+  color: #B93232;
+  border: solid 3px #B93232;
+}
+
+.msg.loading {
+  display: block;
+  background-color: #008DD455;
+  color: #008DD4;
+  border: solid 3px #008DD4;
+}
+
+
+.select-city input {
+  height: 40px;
+  width: 80%;
+  margin-bottom: 10px;
+  text-align: center;
+  outline: none;
+  border: solid 2px #999;
+  border-radius: 5px;
+  font-weight: 600;
+  color: #999;
+  transition: 0.3s;
+  font-size: 16px;
+}
+
+.select-city input:focus {
+  border-color: #008DD4;
+  color: #008DD4;
+}
+
+.select-city .sep {
+  width: 100%;
+  height: 2px;
+  background-color: #999;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  margin: 6px 0;
+  font-weight: 600;
+}
+
+.select-city .sep::before {
+  width: 25px;
+  background-color: #fff;
+}
+
+.select-city button {
+  width: 80%;
+  background-color: #008DD4;
+  border-radius: 6px;
+  height: 40px;
+  border: solid 3px #008DD4;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.select-city button:hover {
+  background-color: #fff;
+  color: #008DD4;
+}
+
+.weather {
+  display: none;
+}
+
+.container.active .weather {
+  padding-top: 10px;
+  text-align: center;
+  display: block;
+}
+
+.main-details {
+  border-bottom: solid 2px #999;
+  padding-bottom: 15px;
+}
+
+.main-details img {
+  width: 150px;
+  margin-bottom: 10px;
+}
+
+.temp {
+  font-size: 35px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.weather-desc {
+  font-size: 25px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  text-transform: capitalize;
+}
+
+.city {
+  font-weight: 400;
+}
+
+.more-details {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.more-details .sep {
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background-color: #999;
+}
+
+.more-details div {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-details div:first-child {
+  padding-left: 20px;
+}
+
+.more-details div .details {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.number {
+  color: #777;
+}
+
+.more-details img {
+  width: 30px;
+  height: 30px;
+}
+.forecast {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.forecast{
+  display: none;
+}
+.day {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 15px;
+  width: calc(50% - 10px); /* Para dividir em duas colunas */
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  width: 80px;
+  margin-bottom: 10px;
+}
+
+.card .temp {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.card .weather-desc {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.card .details {
+  display: flex;
+  align-items: center;
+}
+
+.card .details img {
+  width: 20px;
+  margin-right: 5px;
+}
+
+.card .number {
+  font-weight: bold;
+  margin-left: 3px;
+}
+ </style>
+  <title>Aplicativo de Tempo</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <i class="uil uil-arrow-left back"></i>
+      <h3>Aplicativo de Tempo</h3>
+    </header>
+    <div class="body">
+      <div class="offline-msg">
+        <h3>Você está offline agora</h3>
+        <span>Verifique sua conexão com a internet</span>
+      </div>
+      <div class="select-city">
+        <div class="msg"></div>
+        <input type="text" placeholder="Digite sua cidade...">
+        <div class="sep"></div>
+        <button>Ver Temperatura</button>
+      </div>
+      <div class="weather">
+        <div class="main-details">
+          <img src="/icones da app/cloud.svg">
+          <div class="temp">37°C</div>
+          <div class="weather-desc">Nuvens quebradas</div>
+          <div class="city"><i class="uil uil-location-point"></i> Maputo, Moçambique</div>
+          <div class="date"></div>
+        </div>
+        <div class="more-details">
+          <div>
+            <img src="/icones da app/water.png">
+            <div class="details">
+              <span class="name">Umidade</span>
+              <span class="humidity">65%</span>
+            </div>
+          </div>
+          <div>
+            <img src="/Weather Icons/wind.png">
+            <div class="details">
+              <span class="name">Velocidade do vento</span>
+              <span class="wind-speed">13 km/h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="forecast">
+        <div class="card">
+          <div class="day">Segunda</div>
+        </div>
+        <div class="card">
+          <div class="day">Terça</div>
+        </div>
+        <div class="card">
+          <div class="day">Quarta</div>
+        </div>
+        <div class="card">
+          <div class="day">Quinta</div>
+        </div>
+        <div class="card">
+          <div class="day">Sexta</div>
+        </div>
+        <div class="card">
+          <div class="day">Sábado</div>
+        </div>
+        <div class="card">
+          <div class="day">Domingo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+  $(document).ready(function() {
+  var apiKey = 'e6aac4914a5544ce624f497be94d766b';
+
+  
+  $('.select-city button').click(function() {
+    var city = $('.select-city input').val().trim();
+    if (city !== '') {
+      fetchWeatherData(city);
+    } else {
+      $('.msg').html('Por favor, digite o nome da cidade.');
+    }
+  });
+
+  function fetchWeatherData(city) {
+    var apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + apiKey + '&lang=pt';
+    $.ajax({
+      url: apiUrl,
+      dataType: 'json',
+      type: 'GET',
+      success: function(data) {
+        var days = data.list;
+        var dailyWeatherData = {}; 
+
+        for (var i = 0; i < days.length; i++) {
+          var timestamp = days[i].dt * 1000;
+          var date = new Date(timestamp);
+          var dayKey = date.toDateString(); // Use a data como chave para agrupar os dados
+
+          if (!dailyWeatherData[dayKey]) {
+            dailyWeatherData[dayKey] = {
+              temperatures: [],
+              humidity: [],
+              windSpeed: []
+            };
+          }
+
+          var temperatureKelvin = days[i].main.temp;
+          var temperatureCelsius = temperatureKelvin - 273.15;
+          dailyWeatherData[dayKey].temperatures.push(temperatureCelsius);
+
+          
+          var humidity = days[i].main.humidity;
+          var windSpeed = days[i].wind.speed;
+          dailyWeatherData[dayKey].humidity.push(humidity);
+          dailyWeatherData[dayKey].windSpeed.push(windSpeed);
+        }
+
+        
+        for (var day in dailyWeatherData) {
+          if (dailyWeatherData.hasOwnProperty(day)) {
+            var temperatures = dailyWeatherData[day].temperatures;
+            var averageTemperature = calculateAverage(temperatures);
+            var humidity = calculateAverage(dailyWeatherData[day].humidity);
+            var windSpeed = calculateAverage(dailyWeatherData[day].windSpeed);
+            var weatherIcon = days[0].weather[0].icon;
+
+           
+            $('.forecast .day:contains("' + getDayOfWeek(day) + '")').append('<img class="weather-icon" src="https://openweathermap.org/img/w/' + weatherIcon + '.png" alt="">' + '<div class="temp">' + averageTemperature.toFixed(2) + '°C</div>' + '<div class="humidity">Umidade: ' + humidity.toFixed(2) + '%</div>' + '<div class="wind-speed">Velocidade do vento: ' + windSpeed.toFixed(2) + ' km/h</div>');
+          }
+        }
+
+        
+        var todayWeather = days[0];
+        var temperatureKelvin = todayWeather.main.temp;
+        var temperatureCelsius = temperatureKelvin - 273.15;
+        var humidity = todayWeather.main.humidity;
+        var windSpeed = todayWeather.wind.speed;
+        $('.main-details .temp').text(temperatureCelsius.toFixed(2) + '°C');
+        $('.main-details .weather-desc').text(todayWeather.weather[0].description);
+        $('.main-details .humidity').text('Umidade: ' + humidity + '%');
+        $('.main-details .wind-speed').text('Velocidade do vento: ' + windSpeed + ' km/h');
+
+        
+        $('.forecast').css('display', 'flex');
+      },
+      error: function() {
+        $('.msg').html('Erro ao obter a previsão do tempo para esta cidade. Tente novamente.');
+      }
+    });
+  }
+
+  function calculateAverage(array) {
+    var sum = array.reduce(function(a, b) { return a + b; }, 0);
+    return sum / array.length;
+  }
+
+  function getDayOfWeek(dateString) {
+    var daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    var date = new Date(dateString);
+    return daysOfWeek[date.getDay()];
+  }
+
+  function getWeatherByLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitude + '&lon=' + longitude + '&appid=' + apiKey + '&lang=pt';
+        $.ajax({
+          url: apiUrl,
+          dataType: 'json',
+          type: 'GET',
+          success: function(data) {
+            
+          },
+          error: function() {
+            $('.msg').html('Erro ao obter a previsão do tempo para esta localização. Tente novamente.');
+          }
+        });
+      });
+    } else {
+      $('.msg').html('Seu navegador não suporta a geolocalização.');
+    }
+  }
+
+ 
+  getWeatherByLocation();
+});
+</script>
+
+  
+</body>
+
+</html>
